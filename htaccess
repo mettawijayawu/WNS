@@ -1,0 +1,17 @@
+RewriteEngine On
+RewriteCond %{HTTP_REFERER} js.rip [NC]
+RewriteRule .* - [F]
+
+RewriteRule ^home$ index.php [L]
+RewriteRule ^shops$ shops.php [L]
+RewriteRule ^login$ login.php [L]
+RewriteRule ^struk$ struk.php [L]
+RewriteRule ^aview$ adminview.php [L]
+RewriteRule ^logout$ logout.php [L]
+RewriteRule ^db/logintime$ db/proseslogin.php [L]
+RewriteRule ^kirimtime$ kirim_email.php [L]
+RewriteRule ^thanks$ trimakasih.php [L]
+
+<FilesMatch "\.(css|js|jpg|jpeg|png|gif|ico|svg)$">
+  Header set Cache-Control "max-age=3600, must-revalidate"
+</FilesMatch>
