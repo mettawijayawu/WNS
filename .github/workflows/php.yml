@@ -1,39 +1,33 @@
-name: PHP Composer
+name: PHP Build and Test
 
+# Menentukan kapan action ini berjalan (contoh: saat ada push atau pull request di branch main)
 on:
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
-permissions:
-  contents: read
-
 jobs:
-  build:
-
+  php-steps:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    # 1. Mengambil kode dari repositori GitHub
+    - name: Checkout Code
+      uses: actions/checkout@v4
 
-    - name: Validate composer.json and composer.lock
-      run: composer validate --strict
-
-    - name: Cache Composer packages
-      id: composer-cache
-      uses: actions/cache@v3
+    # 2. Setup Versi PHP yang diinginkan
+    - name: Setup PHP Environment
+      uses: shivammathur/setup-php@v2
       with:
-        path: vendor
-        key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-php-
+        php-version: '8.2' # Ubah sesuai versi PHP proyek Anda
+        extensions: mbstring, intl, pdo_mysql # Tambahkan ekstensi jika diperlukan
+        tools: composer:v2
 
-    - name: Install dependencies
+    # 3. Menginstal Dependensi Composer (jika ada)
+    - name: Install Composer Dependencies
       run: composer install --prefer-dist --no-progress
 
-    # Add a test script to composer.json, for instance: "test": "vendor/bin/phpunit"
-    # Docs: https://getcomposer.org/doc/articles/scripts.md
-
-    # - name: Run test suite
-    #   run: composer run-script test
+    # 4. Menjalankan Script PHP Anda (Contoh: Menjalankan file utama atau Unit Test)
+    - name: Run PHP Script
+      run: php index.php # Ganti dengan perintah jalankan aplikasi atau vendor/bin/phpunit jika ingin testing
